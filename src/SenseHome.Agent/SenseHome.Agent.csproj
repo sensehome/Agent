@@ -11,5 +11,7 @@
     <Folder Include="Configurations\" />
     <Folder Include="Hubs\" />
     <Folder Include="Services\" />
+    <Folder Include="Settings\" />
+    <Folder Include="Options\" />
   </ItemGroup>
 </Project>
