@@ -1,7 +1,6 @@
-﻿using System;
-namespace SenseHome.Agent.Settings
+﻿namespace SenseHome.Agent.Configurations.Models
 {
-    public class MqttBrokerSettings
+    public class BrokerSettings
     {
         public string Host { get; set; }
         public int Port { get; set; }

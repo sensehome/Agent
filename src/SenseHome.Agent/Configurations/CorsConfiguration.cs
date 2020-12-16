@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SenseHome.Agent.Settings;
+using SenseHome.Agent.Configurations.Models;
 
 namespace SenseHome.Agent.Configurations
 {

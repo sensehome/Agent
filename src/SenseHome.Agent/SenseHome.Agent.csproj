@@ -5,13 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="3.0.12" />
+    <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="3.0.13" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Configurations\" />
     <Folder Include="Hubs\" />
     <Folder Include="Services\" />
-    <Folder Include="Settings\" />
     <Folder Include="Options\" />
+    <Folder Include="Configurations\Models\" />
   </ItemGroup>
 </Project>
