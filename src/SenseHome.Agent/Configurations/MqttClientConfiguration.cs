@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MQTTnet.Client.Options;
 using MQTTnet.Extensions.ManagedClient;
+using SenseHome.Agent.Configurations.Models;
 using SenseHome.Agent.Options;
 using SenseHome.Agent.Services;
-using SenseHome.Agent.Settings;
 
 namespace SenseHome.Agent.Configurations
 {
@@ -14,16 +14,16 @@ namespace SenseHome.Agent.Configurations
     {
         public static void AddHostedMqttClient(this IServiceCollection services, IConfiguration configuration)
         {
-            var brokerSettings = new MqttBrokerSettings();
-            configuration.GetSection(nameof(MqttBrokerSettings)).Bind(brokerSettings);
+            var agentMqttSettings = new AgentMqttSettings();
+            configuration.GetSection(nameof(AgentMqttSettings)).Bind(agentMqttSettings);
             services.AddConfiguredMqttClientService(optionBuilder =>
             {
                 optionBuilder
                 .WithAutoReconnectDelay(TimeSpan.FromSeconds(5))
                 .WithClientOptions(new MqttClientOptionsBuilder()
-                    .WithClientId("")
-                    .WithCredentials("", "")
-                    .WithTcpServer(brokerSettings.Host, brokerSettings.Port)
+                    .WithClientId(agentMqttSettings.ClientSettings.Id)
+                    .WithCredentials(agentMqttSettings.ClientSettings.UserName, agentMqttSettings.ClientSettings.Password)
+                    .WithTcpServer(agentMqttSettings.BrokerSettings.Host, agentMqttSettings.BrokerSettings.Port)
                     .Build());
             });
         }

@@ -1,4 +1,4 @@
-﻿namespace SenseHome.Agent.Settings
+﻿namespace SenseHome.Agent.Configurations.Models
 {
     public class CorsSettings
     {
