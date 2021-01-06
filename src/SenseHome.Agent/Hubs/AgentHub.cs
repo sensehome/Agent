@@ -1,19 +1,21 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using SenseHome.Agent.Services;
 
 namespace SenseHome.Agent.Hubs
 {
     public class AgentHub : Hub<IAgentEvent>
     {
-        public AgentHub()
+        private readonly IMqttClientService mqttClientService;
+
+        public AgentHub(MqttClientServiceProvider mqttClientServiceProvider)
         {
-            
+            mqttClientService = mqttClientServiceProvider.MqttClientService;
         }
 
-        public Task RequestMqttBroker(string topic, string payload)
+        public async Task PublishToMqttBroker(string topic, string payload)
         {
-            throw new NotImplementedException();
+            await mqttClientService.PublishAsync(topic, payload);
         }
     }
 }
