@@ -38,11 +38,14 @@ namespace SenseHome.Agent.Services
 
         public async Task HandleConnectedAsync(MqttClientConnectedEventArgs eventArgs)
         {
+            System.Console.WriteLine("Agent-Broker connected");
             await hubContext.Clients.All.AgentConnectionStatus(true);
+            await mqttClient.SubscribeAsync("#");
         }
 
         public async Task HandleDisconnectedAsync(MqttClientDisconnectedEventArgs eventArgs)
         {
+            System.Console.WriteLine($"Agent!Broker disconnected {eventArgs.ReasonCode}");
             await hubContext.Clients.All.AgentConnectionStatus(false);
         }
 
@@ -59,7 +62,6 @@ namespace SenseHome.Agent.Services
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             await mqttClient.StartAsync(options);
-            await mqttClient.SubscribeAsync("#");
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
