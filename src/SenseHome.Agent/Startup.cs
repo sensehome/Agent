@@ -24,6 +24,8 @@ namespace SenseHome.Agent
             services.AddHostedMqttClient(configuration);
             services.AddConfiuredCors(configuration);
             services.AddSignalR();
+            services.AddSignalRJwtAuthentication(configuration);
+            services.AddSenseHomeAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,7 +37,9 @@ namespace SenseHome.Agent
             }
 
             app.UseRouting();
+            app.UseAuthentication();
             app.UseConfiguredCors();
+            app.UseAuthorization();
             app.UseConfiguredSignalR();
         }
     }
