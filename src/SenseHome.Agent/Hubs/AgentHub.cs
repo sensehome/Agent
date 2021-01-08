@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using SenseHome.Agent.Services;
@@ -14,6 +15,17 @@ namespace SenseHome.Agent.Hubs
         public AgentHub(MqttClientServiceProvider mqttClientServiceProvider)
         {
             mqttClientService = mqttClientServiceProvider.MqttClientService;
+        }
+
+        public override Task OnConnectedAsync()
+        {
+            Clients.Client(Context.ConnectionId).AgentConnectionStatus(mqttClientService.IsMqttClientConnected());
+            return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            return base.OnDisconnectedAsync(exception);
         }
 
         public async Task PublishToMqttBroker(string topic, string payload)

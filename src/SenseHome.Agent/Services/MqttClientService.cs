@@ -68,5 +68,14 @@ namespace SenseHome.Agent.Services
         {
             await mqttClient.StopAsync();
         }
+
+        public bool IsMqttClientConnected()
+        {
+            if (mqttClient.IsStarted)
+            {
+                return mqttClient.IsConnected;
+            }
+            return false;
+        }
     }
 }

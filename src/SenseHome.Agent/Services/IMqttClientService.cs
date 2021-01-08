@@ -12,5 +12,6 @@ namespace SenseHome.Agent.Services
                                           IMqttApplicationMessageReceivedHandler
     {
         Task PublishAsync(string topic, string payload);
+        bool IsMqttClientConnected();
     }
 }
