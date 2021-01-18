@@ -26,6 +26,7 @@ namespace SenseHome.Agent
             services.AddSignalR();
             services.AddSignalRJwtAuthentication(configuration);
             services.AddSenseHomeAuthorization();
+            services.AddDependentServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
