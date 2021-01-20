@@ -30,25 +30,19 @@ namespace SenseHome.Agent.Hubs
             return base.OnConnectedAsync();
         }
 
+
         public override Task OnDisconnectedAsync(Exception exception)
         {
+            foreach (var topic in cacheService.GetKeys())
+            {
+                Console.WriteLine(topic, cacheService.GetValueOrDefault(topic));
+            }
             return base.OnDisconnectedAsync(exception);
         }
 
+
         public async Task PublishToMqttBroker(string topic, string payload)
         {
-            //TODO: refactor this topic checking
-            if(!topic.StartsWith("$SYS") && topic.Contains("status", StringComparison.OrdinalIgnoreCase))
-            {
-                if(cacheService.IsExist(topic))
-                {
-                    cacheService.Set(topic, payload);
-                }
-                else
-                {
-                    cacheService.Add(topic, payload);
-                }
-;           }
             await mqttClientService.PublishAsync(topic, payload);
         }
     }
