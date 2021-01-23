@@ -15,5 +15,6 @@
     <Folder Include="Services\" />
     <Folder Include="Options\" />
     <Folder Include="Configurations\Models\" />
+    <Folder Include="Services\Caching\" />
   </ItemGroup>
 </Project>

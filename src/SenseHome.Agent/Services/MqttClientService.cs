@@ -6,6 +6,7 @@ using MQTTnet.Client.Connecting;
 using MQTTnet.Client.Disconnecting;
 using MQTTnet.Extensions.ManagedClient;
 using SenseHome.Agent.Hubs;
+using SenseHome.Agent.Services.Caching;
 
 namespace SenseHome.Agent.Services
 {
@@ -14,13 +15,18 @@ namespace SenseHome.Agent.Services
         private readonly IManagedMqttClient mqttClient;
         private readonly IManagedMqttClientOptions options;
         private readonly IHubContext<AgentHub, IAgentEvent> hubContext;
+        private readonly ICacheService cacheService;
 
-        public MqttClientService(IManagedMqttClientOptions options, IHubContext<AgentHub, IAgentEvent> hubContext)
+        public MqttClientService(
+            IManagedMqttClientOptions options,
+            IHubContext<AgentHub, IAgentEvent> hubContext,
+            ICacheService cacheService)
         {
             this.hubContext = hubContext;
             this.options = options;
             mqttClient = new MqttFactory().CreateManagedMqttClient();
             ConfigureMqttClient();
+            this.cacheService = cacheService;
         }
 
         private void ConfigureMqttClient()
@@ -30,9 +36,27 @@ namespace SenseHome.Agent.Services
             mqttClient.ApplicationMessageReceivedHandler = this;
         }
 
+        #region application message intercept helper functions
+        private bool CheckWhetherTheTopicIsCacheableOrNot(string topic)
+        {
+            return !topic.StartsWith("$SYS") && topic.Contains("status", System.StringComparison.OrdinalIgnoreCase);
+        }
+        #endregion
+
         public async Task HandleApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs eventArgs)
         {
             var payload = System.Text.Encoding.UTF8.GetString(eventArgs.ApplicationMessage.Payload);
+            if (CheckWhetherTheTopicIsCacheableOrNot(eventArgs.ApplicationMessage.Topic))
+            {
+                if (cacheService.IsExist(eventArgs.ApplicationMessage.Topic))
+                {
+                    cacheService.Set(eventArgs.ApplicationMessage.Topic, payload);
+                }
+                else
+                {
+                    cacheService.Add(eventArgs.ApplicationMessage.Topic, payload);
+                }
+            }
             await hubContext.Clients.All.Broadcast(eventArgs.ApplicationMessage.Topic, payload);
         }
 
